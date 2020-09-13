@@ -16,5 +16,7 @@ const server = app.listen(8000, () => {
 const io = socket(server);
 
 io.on('connection', (socket) => {
-    socket.on('updateData', tasks);
+    socket.on('updateData', () => {
+        socket.to(socket.id).emit('updateData', tasks);
+    });
 });
