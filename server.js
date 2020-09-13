@@ -19,4 +19,14 @@ io.on('connection', (socket) => {
     socket.on('updateData', () => {
         socket.to(socket.id).emit('updateData', tasks);
     });
+
+    socket.on('addTask', (task) => {
+        tasks.push(task);
+        socket.broadcast.emit('addTask', task);
+    });
+
+    socket.on('removeTask', (taskIndex) => {
+        tasks.splice(taskIndex, 1);
+        socket.broadcast.emit('removeTask', taskIndex);
+    });
 });
