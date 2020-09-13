@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 class App extends React.Component {
   state = {
     tasks: [],
+    taskName: '',
   }
 
   componentDidMount() {
@@ -13,8 +14,22 @@ class App extends React.Component {
 
   removeTask(taskIndex) {
     this.socket.emit('removeTask', taskIndex);
-    const newTasks = this.state.tasks;
-    this.setState({task: newTasks.splice(taskIndex, 1)});
+    this.setState({tasks: this.state.tasks.filter(task => this.state.tasks.indexOf(task) !== taskIndex)});
+  }
+
+  updateTaskName(value) {
+    this.setState({ taskName: value })
+  }
+
+  addTask(task) {
+    this.setState({ tasks: [...this.state.tasks, task] })
+  }
+
+  submitForm(event) {
+    event.preventDefault();
+    this.socket.emit('addTask', this.state.taskName);
+    this.addTask(this.state.taskName);
+    this.updateTaskName('');
   }
 
   render() {
@@ -36,8 +51,8 @@ class App extends React.Component {
           ))}
         </ul>
   
-        <form id="add-task-form">
-          <input className="text-input" autoComplete="off" type="text" placeholder="Type your description" id="task-name" />
+        <form id="add-task-form" onSubmit={event => this.submitForm(event)}>
+          <input className="text-input" value={this.state.taskName} onChange={event => this.updateTaskName(event.currentTarget.value)} autoComplete="off" type="text" placeholder="Type your description" id="task-name" />
           <button className="btn" type="submit">Add</button>
         </form>
   
