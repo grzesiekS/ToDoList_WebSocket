@@ -55,6 +55,20 @@ p {
   opacity: 1;
 }
 
+.text-task-input {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 8px 25px 8px 5px;
+  font-family: inherit;
+  outline: none;
+  opacity: 0.6;
+  transition: .3s;
+}
+
+.text-task-input:focus {
+  opacity: 1;
+}
 
 .tasks-section {
   margin-bottom: 100px;

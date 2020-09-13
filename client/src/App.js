@@ -36,10 +36,9 @@ class App extends React.Component {
     if(event !== undefined) {
       this.socket.emit('editRecord', ({taskChange, id}));
     }
-    this.setState(this.state.tasks.map(task => {
-      if(task.id === id) task.task = taskChange;
-      return null;
-    }));
+    this.setState({tasks: this.state.tasks.map(task => (
+      task.id === id ? {id: id, task: taskChange} : {id: task.id, task: task.task}
+    ))});
   }
 
   submitForm(event) {
@@ -64,7 +63,7 @@ class App extends React.Component {
         <ul className="tasks-section__list" id="tasks-list">
           {this.state.tasks.map(task => (
             <li className="task" key={task.id}>
-              <input className="text-input" type="text" value={task.task} onChange={event => this.editRecord(event.currentTarget.value, task.id, event)}></input>
+              <input className="text-task-input" type="text" value={task.task} onChange={event => this.editRecord(event.currentTarget.value, task.id, event)}></input>
               <button className="btn btn--red" onClick={event => this.removeTask(task.id,event) }>Remove</button>
             </li>
           ))}
