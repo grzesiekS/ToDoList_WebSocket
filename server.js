@@ -29,4 +29,9 @@ io.on('connection', (socket) => {
         tasks.splice(tasks.indexOf(tasks.filter(task => task.id === taskIndex)[0]), 1);
         socket.broadcast.emit('removeTask', taskIndex);
     });
+
+    socket.on('editRecord', (taskChange) => {
+        tasks.map(task => {if(task.id === taskChange.id) task.task = taskChange.taskChange});
+        socket.broadcast.emit('editRecord', (taskChange));
+    });
 });

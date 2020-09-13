@@ -14,6 +14,7 @@ class App extends React.Component {
     this.socket.on('addTask', task => this.addTask(task));
     this.socket.on('removeTask', (taskIndex) => this.removeTask(taskIndex));
     this.socket.on('updateData', tasksServer => this.setState({ tasks: tasksServer }));
+    this.socket.on('editRecord', (taskChange) => this.editRecord(taskChange.taskChange, taskChange.id))
   }
 
   removeTask(taskIndex, event) {
@@ -29,6 +30,16 @@ class App extends React.Component {
 
   addTask(task) {
     this.setState({ tasks: [...this.state.tasks, {id: task.id, task: task.task}] });
+  }
+
+  editRecord(taskChange, id, event) {
+    if(event !== undefined) {
+      this.socket.emit('editRecord', ({taskChange, id}));
+    }
+    this.setState(this.state.tasks.map(task => {
+      if(task.id === id) task.task = taskChange;
+      return null;
+    }));
   }
 
   submitForm(event) {
@@ -52,7 +63,8 @@ class App extends React.Component {
   
         <ul className="tasks-section__list" id="tasks-list">
           {this.state.tasks.map(task => (
-            <li className="task" key={task.id}>{task.task} 
+            <li className="task" key={task.id}>
+              <input className="text-input" type="text" value={task.task} onChange={event => this.editRecord(event.currentTarget.value, task.id, event)}></input>
               <button className="btn btn--red" onClick={event => this.removeTask(task.id,event) }>Remove</button>
             </li>
           ))}
