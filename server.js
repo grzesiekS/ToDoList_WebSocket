@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('removeTask', (taskIndex) => {
-        tasks.splice(taskIndex, 1);
+        tasks.splice(tasks.indexOf(tasks.filter(task => task.id === taskIndex)[0]), 1);
         socket.broadcast.emit('removeTask', taskIndex);
     });
 });

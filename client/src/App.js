@@ -1,5 +1,6 @@
 import React from 'react';
 import io from 'socket.io-client';
+import uuid from 'uuid';
 
 class App extends React.Component {
   state = {
@@ -19,21 +20,22 @@ class App extends React.Component {
     if(event !== undefined) {
       this.socket.emit('removeTask', taskIndex);
     }
-    this.setState({tasks: this.state.tasks.filter(task => this.state.tasks.indexOf(task) !== taskIndex)});
+    this.setState({tasks: this.state.tasks.filter(task => task.id !== taskIndex)});
   }
 
   updateTaskName(value) {
-    this.setState({ taskName: value })
+    this.setState({ taskName: value });
   }
 
   addTask(task) {
-    this.setState({ tasks: [...this.state.tasks, task] })
+    this.setState({ tasks: [...this.state.tasks, {id: task.id, task: task.task}] });
   }
 
   submitForm(event) {
     event.preventDefault();
-    this.socket.emit('addTask', this.state.taskName);
-    this.addTask(this.state.taskName);
+    const id = uuid();
+    this.socket.emit('addTask', {id: id, task: this.state.taskName});
+    this.addTask({id: id, task: this.state.taskName});
     this.updateTaskName('');
   }
 
@@ -50,8 +52,8 @@ class App extends React.Component {
   
         <ul className="tasks-section__list" id="tasks-list">
           {this.state.tasks.map(task => (
-            <li className="task" key={this.state.tasks.indexOf(task)}>{task} 
-              <button className="btn btn--red" onClick={event => this.removeTask(this.state.tasks.indexOf(task),event) }>Remove</button>
+            <li className="task" key={task.id}>{task.task} 
+              <button className="btn btn--red" onClick={event => this.removeTask(task.id,event) }>Remove</button>
             </li>
           ))}
         </ul>
