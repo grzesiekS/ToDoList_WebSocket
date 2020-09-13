@@ -1,6 +1,12 @@
 import React from 'react';
+import io from 'socket.io-client';
 
 class App extends React.Component {
+
+  componentDidMount() {
+    this.socket = io();
+    this.socket.connect('localhost:8000');
+  }
 
   render() {
     return (
