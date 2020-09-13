@@ -6,13 +6,15 @@ class App extends React.Component {
     tasks: [],
   }
 
-  removeTask(taskIndex) {
-    const newTasks = this.state.tasks;
-    this.setState({task: newTasks.splice(taskIndex, 1)});
-  }
-
   componentDidMount() {
     this.socket = io('localhost:8000');
+    this.socket.on('removeTask', (taskIndex) => this.removeTask(taskIndex));
+  }
+
+  removeTask(taskIndex) {
+    this.socket.emit('removeTask', taskIndex);
+    const newTasks = this.state.tasks;
+    this.setState({task: newTasks.splice(taskIndex, 1)});
   }
 
   render() {
