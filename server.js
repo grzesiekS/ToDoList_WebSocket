@@ -3,6 +3,8 @@ const socket = require('socket.io');
 
 const app = express();
 
+const tasks = [];
+
 app.use((req, res) => {
     console.log('Not found...');
 });
@@ -12,3 +14,7 @@ const server = app.listen(8000, () => {
 });
 
 const io = socket(server);
+
+io.on('connection', (socket) => {
+    socket.on('updateData', tasks);
+});
