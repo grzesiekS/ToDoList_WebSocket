@@ -63,7 +63,7 @@ class App extends React.Component {
         <ul className="tasks-section__list" id="tasks-list">
           {this.state.tasks.map(task => (
             <li className="task" key={task.id}>
-              <input className="text-task-input" type="text" value={task.task} onChange={event => this.editRecord(event.currentTarget.value, task.id, event)}></input>
+              <input className="text-input text-task-input" type="text" value={task.task} onChange={event => this.editRecord(event.currentTarget.value, task.id, event)}></input>
               <button className="btn btn--red" onClick={event => this.removeTask(task.id,event) }>Remove</button>
             </li>
           ))}
